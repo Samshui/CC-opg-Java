@@ -69,7 +69,6 @@ public class OpgHandler {
 					this.Operations.peek() == '#' &&
 					this.Objects.size() == 1 &&
 					this.Objects.peek() == 'E') {
-//				System.out.println("R");
 				System.exit(0);
 			}
 
@@ -80,6 +79,9 @@ public class OpgHandler {
 			}
 			else {
 				Character top = this.Operations.peek();
+//				System.out.println("TOP: " + top);
+//				System.out.println("CUR: " + cur);
+//				System.out.println(utils.result(top, cur));
 
 				if (utils.result(top, cur)  == 1) {
 					// 规约
@@ -138,7 +140,8 @@ public class OpgHandler {
 	/* Main to run */
 	public static void main(String[] args) {
 		OpgHandler opgHandler = new OpgHandler();
-		opgHandler.init(args[0]);
+		// opgHandler.init(args[0]);
+		opgHandler.init("in.txt");
 		opgHandler.handle();
 	}
 }
