@@ -1,5 +1,3 @@
-import javafx.util.Pair;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,7 +9,7 @@ public class Utils {
 	ArrayList<Character> Vn;
 	ArrayList<Character> Vt;
 	ArrayList<Character> sym;
-	ArrayList<Pair<String, Character>> spec;
+	// ArrayList<Pair<String, Character>> spec;
 	int[][] opgMatrix;
 
 	public Utils() {
@@ -59,12 +57,12 @@ public class Utils {
 				{2, 2, 2, 2, 0, 0}
 		};
 
-		this.spec = new ArrayList<Pair<String, Character>>(List.of(
-				new Pair<>("E+E", 'E'),
-				new Pair<>("E*E", 'E'),
-				new Pair<>("(E)", 'E'),
-				new Pair<>("i",	  'E')
-		));
+//		this.spec = new ArrayList<Pair<String, Character>>(List.of(
+//				new Pair<>("E+E", 'E'),
+//				new Pair<>("E*E", 'E'),
+//				new Pair<>("(E)", 'E'),
+//				new Pair<>("i",	  'E')
+//		));
 	}
 
 	public int symIndex(Character c) {
