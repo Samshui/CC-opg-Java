@@ -24,8 +24,10 @@ public class OpgHandler {
 			reader = new InputStreamReader(new FileInputStream(file));
 
 			int charget;
-			while ((charget = reader.read()) != -1)
+			while ((charget = reader.read()) != -1) {
+				if ((char) charget == '\r') break;
 				this.content.add((char) charget);
+			}
 
 			reader.close();
 		} catch (Exception e) {
@@ -142,6 +144,7 @@ public class OpgHandler {
 		OpgHandler opgHandler = new OpgHandler();
 		opgHandler.init(args[0]);
 		// opgHandler.init("in.txt");
+		System.out.println((int)'\n');
 		opgHandler.handle();
 	}
 }
