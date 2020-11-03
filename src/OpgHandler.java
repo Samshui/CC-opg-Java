@@ -140,8 +140,8 @@ public class OpgHandler {
 	/* Main to run */
 	public static void main(String[] args) {
 		OpgHandler opgHandler = new OpgHandler();
-		// opgHandler.init(args[0]);
-		opgHandler.init("in.txt");
+		opgHandler.init(args[0]);
+		// opgHandler.init("in.txt");
 		opgHandler.handle();
 	}
 }
