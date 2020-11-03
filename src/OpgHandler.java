@@ -144,7 +144,6 @@ public class OpgHandler {
 		OpgHandler opgHandler = new OpgHandler();
 		opgHandler.init(args[0]);
 		// opgHandler.init("in.txt");
-		System.out.println((int)'\n');
 		opgHandler.handle();
 	}
 }
