@@ -9,8 +9,7 @@ public class OpgHandler {
 
 	/* file content */
 	private ArrayList<Character> content = new ArrayList<Character>();
-	private Stack<Character> Operations = new Stack<Character>();
-	private Stack<Character> Objects = new Stack<Character>();
+	private Stack<Character> S = new Stack<Character>();
 
 	/**
 	 * @description file-readin
@@ -51,7 +50,7 @@ public class OpgHandler {
 	 */
 	public void init(String fileName) {
 		readSourceFile(fileName);
-		this.Operations.push('#');
+		this.S.push('#');
 		this.content.add('#');
 	}
 
@@ -67,81 +66,105 @@ public class OpgHandler {
 		for (int i = 0; i < this.content.size(); i++) {
 			char cur = this.content.get(i);
 
-			if (cur == '#' &&
-					this.Operations.peek() == '#' &&
-					this.Objects.size() == 1 &&
-					this.Objects.peek() == 'E') {
-				System.exit(0);
-			}
-
-			// 当前读入符号不属于终结符号 -- 不能识别
+			// 错误处理
 			if (!utils.isTerminal(cur)) {
 				System.out.println("E");
 				return;
 			}
-			else {
-				Character top = this.Operations.peek();
-//				System.out.println("TOP: " + top);
-//				System.out.println("CUR: " + cur);
-//				System.out.println(utils.result(top, cur));
+//			System.out.println("CUR: " + cur);
+//			System.out.println("PEEK: " + this.S.peek());
 
-				if (utils.result(top, cur)  == 1) {
-					// 规约
-					if (top == 'i') {
-						this.Operations.pop();
-						this.Objects.push('E');
-						System.out.println("R");
-					} else if (top == '*' || top == '+') {
-						// 规约失败 -- 二元算符缺失对象
-						if (this.Objects.size() < 2) {
-							System.out.println("RE");
-							return;
-						} else {
-							char c = this.Operations.pop();
-							if (this.content.get(i) == '#') {
-								System.out.println("RE");
-								return;
-							}
-							this.Operations.push(c);
+			if (this.S.peek() == 'E') {
+				/*
+				 * #...E*E
+				 * #...E+E
+				 */
+				this.S.pop();
+				char top = this.S.peek();
 
-							char second = this.Objects.pop();
-							char first = this.Objects.pop();
+				// 成功退出
+				if (top == '#' && cur == '#') return;
 
-							String s = "" + first + top + second;
-							if (s.equals("E+E") || s.equals("E*E")) {
-								this.Objects.push('E');
-								this.Operations.pop();
-								System.out.println("R");
-							}
-						}
-					} else if (top == ')') {
-						// )的规约需要有(的对应和一个对象
-						if (this.Operations.size() < 3 || this.Objects.peek() != 'E') {
-							System.out.println("RE");
-							return;
-						} else {
-							this.Operations.pop();
-							if (this.Operations.peek() == '(') {
-								this.Operations.pop();
-								System.out.println("R");
-								// this.Objects.pop();
-								// this.Objects.push('E');
-							} else {
-								System.out.println("RE");
-							}
-						}
-					}
-
-					i--;
-				} else if (utils.result(top, cur)  == 2 || utils.result(top, cur)  == 3) {
-					// 移进
-					this.Operations.push(cur);
-					System.out.println("I" + cur);
-				} else if (utils.result(top, cur)  == 0) {
-					// 无法比较符号优先关系的栈顶和读入符号
+				// 错误处理 且不允许在E后读i
+				if (!utils.isTerminal(top) || cur == 'i') {
 					System.out.println("E");
 					return;
 				}
+
+				if (utils.result(top, cur) == 1) {
+					if (top == '*' || top == '+') {
+						this.S.pop();
+						if (this.S.peek() != 'E') {
+							System.out.println("RE");
+							return;
+						}
+						System.out.println("R");
+					} else {
+						// 错误处理
+						System.out.println("RE");
+						return;
+					}
+					i--;
+				} else if (utils.result(top, cur) == 2 || utils.result(top, cur) == 3) {
+					this.S.push('E');
+					this.S.push(cur);
+					System.out.println("I" + cur);
+				} else {
+					// 错误处理
+					System.out.println("RE");
+					return;
+				}
+
+			} else if (utils.isTerminal(this.S.peek())) {
+				/*
+				 * #...(E)
+				 * #...i
+				 */
+				char top = this.S.peek();
+//				System.out.println("TOP: " + top);
+//				System.out.println("CUR: " + cur);
+				if (utils.result(top, cur) == 1) {
+					if (top == 'i') {
+						this.S.pop();
+
+						// 错误处理 i后不许有E
+						if (this.S.peek() == 'E') {
+							System.out.println("RE");
+							return;
+						} else {
+							this.S.push('E');
+							System.out.println("R");
+						}
+					} else if (top == ')') {
+						this.S.pop(); //)
+						char c = this.S.pop();
+						if (c == 'E' && this.S.peek() == '(') {
+							this.S.pop();
+							this.S.push('E');
+							System.out.println("R");
+						} else {
+							System.out.println("RE");
+							return;
+						}
+					} else {
+						// 错误处理
+						System.out.println("RE");
+						return;
+					}
+					i--;
+				} else if (utils.result(top, cur) == 2 || utils.result(top, cur) == 3) {
+					this.S.push(cur);
+					System.out.println("I" + cur);
+				} else {
+					// 错误处理
+					System.out.println("E");
+					return;
+				}
+
+			} else {
+				// 错误处理
+				System.out.println("RE");
+				return;
 			}
 		}
 	}
@@ -151,7 +174,6 @@ public class OpgHandler {
 	public static void main(String[] args) {
 		OpgHandler opgHandler = new OpgHandler();
 		opgHandler.init(args[0]);
-		opgHandler.fileContentPrint();
 		// opgHandler.init("in.txt");
 		opgHandler.handle();
 	}
