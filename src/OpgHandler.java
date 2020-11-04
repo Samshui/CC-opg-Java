@@ -151,6 +151,7 @@ public class OpgHandler {
 	public static void main(String[] args) {
 		OpgHandler opgHandler = new OpgHandler();
 		opgHandler.init(args[0]);
+		opgHandler.fileContentPrint();
 		// opgHandler.init("in.txt");
 		opgHandler.handle();
 	}
