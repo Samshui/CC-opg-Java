@@ -97,6 +97,13 @@ public class OpgHandler {
 							System.out.println("RE");
 							return;
 						} else {
+							char c = this.Operations.pop();
+							if (this.content.get(i) == '#') {
+								System.out.println("RE");
+								return;
+							}
+							this.Operations.push(c);
+
 							char second = this.Objects.pop();
 							char first = this.Objects.pop();
 
@@ -116,6 +123,7 @@ public class OpgHandler {
 							this.Operations.pop();
 							if (this.Operations.peek() == '(') {
 								this.Operations.pop();
+								System.out.println("R");
 								// this.Objects.pop();
 								// this.Objects.push('E');
 							} else {
