@@ -71,8 +71,6 @@ public class OpgHandler {
 				System.out.println("E");
 				return;
 			}
-//			System.out.println("CUR: " + cur);
-//			System.out.println("PEEK: " + this.S.peek());
 
 			if (this.S.peek() == 'E') {
 				/*
@@ -121,8 +119,6 @@ public class OpgHandler {
 				 * #...i
 				 */
 				char top = this.S.peek();
-//				System.out.println("TOP: " + top);
-//				System.out.println("CUR: " + cur);
 				if (utils.result(top, cur) == 1) {
 					if (top == 'i') {
 						this.S.pop();
